@@ -1,4 +1,4 @@
-package com.curse.spring_boot_mastery;
+package com.udemy.springbootexpert;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

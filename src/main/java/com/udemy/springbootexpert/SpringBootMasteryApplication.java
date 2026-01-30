@@ -1,4 +1,4 @@
-package com.curse.spring_boot_mastery;
+package com.udemy.springbootexpert;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
