@@ -48,6 +48,27 @@ public class ProductController {
         return ResponseEntity.ok(productEntity.get());
     }
 
+    @PutMapping("/products/{id}")
+    @Transactional
+    public ResponseEntity<ProductEntity> updateProductById(@PathVariable String id,
+                                                           @RequestBody @Valid Product product) {
+        Optional<ProductEntity> existingProductEntity = productRepository.findById(id);
+        existingProductEntity.orElseThrow(() -> {
+                    logger.warning("Product not found for update: " + id);
+                    return new RuntimeException("Product not found");
+                }
+        );
+        ProductEntity productEntity = existingProductEntity.get();
+        productEntity.setName(product.name());
+        productEntity.setDescription(product.description());
+        productEntity.setPrice(product.price());
+
+        productRepository.save(productEntity);
+
+        logger.info("Product updated successfully: " + id);
+        return ResponseEntity.ok(productEntity);
+    }
+
     @DeleteMapping("/products/{id}")
     @Transactional
     public ResponseEntity<Void> deleteProductById(@PathVariable String id) {

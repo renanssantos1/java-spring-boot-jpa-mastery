@@ -2,14 +2,12 @@ package com.udemy.springbootexpert.entity;
 
 import com.udemy.springbootexpert.model.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Table(name = "tb_product")
 @Entity(name = "product")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
