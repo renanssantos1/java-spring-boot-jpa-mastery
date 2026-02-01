@@ -6,12 +6,10 @@ import com.udemy.springbootexpert.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
@@ -27,15 +25,26 @@ public class ProductController {
 
     @PostMapping("/products")
     @Transactional
-    public ResponseEntity saveProduct(@RequestBody @Valid Product product, UriComponentsBuilder uriBuilder){
-
+    public ResponseEntity saveProduct(@RequestBody @Valid Product product,
+                                      UriComponentsBuilder uriBuilder) {
         ProductEntity productEntity = new ProductEntity(product);
 
         productRepository.save(productEntity);
         var uri = uriBuilder.path("/products/{id}").buildAndExpand(productEntity.getId()).toUri();
 
-        logger.info("Product saved successfully: " );
+        logger.info("Product saved successfully: " + productEntity.getId());
         return ResponseEntity.created(uri).body(productEntity);
+    }
 
+    @GetMapping("/products/{id}")
+    public ResponseEntity<ProductEntity> getProductById(@PathVariable String id) {
+        Optional<ProductEntity> productEntity = productRepository.findById(id);
+        productEntity.orElseThrow(() -> {
+                    logger.warning("Product not found: " + id);
+                    return new RuntimeException("Product not found");
+                }
+        );
+
+        return ResponseEntity.ok(productEntity.get());
     }
 }
