@@ -47,4 +47,19 @@ public class ProductController {
 
         return ResponseEntity.ok(productEntity.get());
     }
+
+    @DeleteMapping("/products/{id}")
+    @Transactional
+    public ResponseEntity<Void> deleteProductById(@PathVariable String id) {
+        Optional<ProductEntity> productEntity = productRepository.findById(id);
+        productEntity.orElseThrow(() -> {
+                    logger.warning("Product not found for deletion: " + id);
+                    return new RuntimeException("Product not found");
+                }
+        );
+
+        productRepository.deleteById(id);
+        logger.info("Product deleted successfully: " + id);
+        return ResponseEntity.noContent().build();
+    }
 }
